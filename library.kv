@@ -1,0 +1,671 @@
+
+#: include components.kv
+#: set color [0.003,0.34,0.61,1]
+#: set boxlayout_color [0.9,0.9,0.9]
+#: import Swap kivy.uix.screenmanager.FadeTransition
+#: import MDRaisedButton kivymd.button.MDRaisedButton
+#: import MDFloatingActionButton kivymd.button.MDFloatingActionButton
+#: import Window kivy.core.window.Window
+#: import MDTextField kivymd.textfields.MDTextField 
+#: import MDCheckbox kivymd.selectioncontrols.MDCheckbox
+
+<Manager>:
+	transtion:Swap()
+	Splash:
+	Home:
+	Admin:
+	Librarian:
+	Patron:
+	LibrarianLogin:
+	PatronLogin:
+	AdminLogin:
+	Status:
+	UserData:
+	ManageAccount:
+	AddUser:
+	DeleteUser:
+	Return:
+	Borrow:
+	AddMaterial:
+	DeleteMaterial:
+
+<Home>:
+	name:"home"
+	canvas.before:
+		Rectangle:
+			#source:"images/home.jpg"
+			pos:self.pos
+			size:self.size
+	
+	MDLabel
+		id:title
+		text:"University Library"
+		pos_hint:{"top":1,"center_x":0.5}
+		size_hint:(0.8,0.1)
+		font_style:"Display2"
+		text_color:color
+
+	BoxLayout:
+		size_hint:(1,0.8)
+		top:title.top-title.height
+		padding:[dp(10),dp(10)]
+		spacing:dp(10)
+		BoxLayout:
+			canvas.before:
+				Color:
+					rgba:boxlayout_color
+				Rectangle:
+					pos:self.pos
+					size:self.size
+			size_hint:(0.3,0.6)
+			pos_hint:{"center_x":0.5,"center_y":0.5}
+			spacing:"10dp"
+			orientation:"vertical"
+
+			MDRaisedButton:
+				text:"System Admin"
+				size_hint:(1,0.25)
+				on_release:
+					app.root.current="adminlogin"
+			MDRaisedButton:
+				text:"Patron"
+				size_hint:(1,0.25)
+				on_release:
+					app.root.current="patronlogin"
+			MDRaisedButton:
+				text:"Librarian"
+				size_hint:(1,0.25)
+				on_release:
+					app.root.current="librarianlogin"
+
+			MDRaisedButton:
+				text:"EXIT"
+				size_hint:(1,0.25)
+				on_release:
+					Window.close()
+		MDLabel:
+			canvas.before:
+				Rectangle:
+					pos:self.pos
+					size:self.size
+					source:"images/home.jpg"
+			size_hint:(0.7,1)
+	MDLabel
+		halign:"center"
+		valign:"bottom"
+		text:"Powered by csc 409 Group 9"
+		pos_hint:{"bottom":1}
+		size_hint:(1,0.1)
+		font_style:"Subhead"
+		bold:True
+		color:color
+
+<Splash>:
+	name: "splash"
+
+<Patron>:
+	name: "patron"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	page_title:"Patron"
+	next_page:"patronlogin"
+	BoxLayout:
+		spacing:"10sp"
+		size_hint:(1,0.8)
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		padding:[10,0]
+		BoxLayout:
+			orientation:"vertical"
+			size_hint:(0.3,0.3)
+			spacing:"10dp"
+			pos_hint:{"center_y":0.5}
+			MDRaisedButton:
+				text:"Borrow"
+				size_hint:(1,0.5)
+				#disabled:True
+				on_release:
+					app.root.current="borrow"
+
+			MDRaisedButton:
+				text:"Return"
+				size_hint:(1,0.5)
+				on_release:
+					root.show_dialog()
+
+		Image:
+			source:"images/library.jpg"
+			size_hint:(0.7,1)
+
+
+<PatronLogin>:
+	name: "patronlogin"
+	accesscode:accesscode_kv
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	next_page:"home"
+	page_title:"Patron Login"
+
+	BoxLayout:
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		size_hint:(0.5,0.2)
+		spacing:"10dp"
+		orientation:"vertical"
+		MDTextField:
+			id:accesscode_kv
+			hint_text:"Access Code"
+			size_hint:(1,0.5)
+		
+		MDRaisedButton:
+			text:"Login"
+			size_hint:(0.5,0.5)
+			pos_hint:{"center_x":0.5}
+			on_release:
+				root.login()
+<Borrow>:
+	name:"borrow"
+	mat_name:mat_name_kv
+	searchdisplay:search_kv
+	page_title:"Borrow"
+	next_page:"patron"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	BoxLayout:
+		size_hint:(0.8,0.8)
+		orientation:"vertical"
+		spacing:"10dp"
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		padding:[0,"10dp"]
+		BoxLayout:
+			size_hint:(0.6,0.1)
+			pos_hint:{"center_x":0.5}
+			spacing:"10dp"
+			MDLabel:
+				text:"Select Material:"
+				size_hint:(0.5,1)
+				halign:"center"
+				bold:True
+				font_style:"Subhead"
+			Spinner:
+				values:["Book","Micro Finch","Encyclopaedia"]
+				text:"Book"
+				size_hint:(0.5,1)
+				background_color:color
+
+		BoxLayout:
+			size_hint:(1,0.1)
+			pos_hint:{"center_x":0.5}
+			MDTextField:
+				id:mat_name_kv
+				size_hint:(0.9,1)
+				hint_text:"Material ID"
+				on_text:
+					root.search()
+			MDFloatingActionButton:
+				icon:"magnify"
+				size_hint:(None,1)
+				width:self.height
+				theme_text_color:"Custom"
+				text_color:[1,1,1,1]
+				md_bg_color:color
+		ScrollView:
+			size_hint:(0.8,0.6)
+			pos_hint:{"center_x":0.5}
+			GridLayout:
+				id:search_kv
+				cols:1
+				size_hint:(1,None)
+				height:self.minimum_height
+
+<Return>:
+	name:"return"
+	page_title:"Return"
+	next_page:"patron"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+
+
+
+
+
+
+	
+
+<Admin>:
+	name:"admin"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	page_title:"Admin"
+	next_page:"adminlogin"
+	BoxLayout:
+		spacing:"10dp"
+		size_hint:(1,0.8)
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		padding:[10,0]
+		BoxLayout:
+			orientation:"vertical"
+			size_hint:(0.3,0.5)
+			spacing:"10dp"
+			pos_hint:{"center_y":0.5}
+			MDRaisedButton:
+				text:"check Status"
+				size_hint:(1,0.25)
+				on_release:
+					app.root.current="status"
+			
+			MDRaisedButton:
+				text:"Manage Accounts"
+				size_hint:(1,0.25)
+				on_release:
+					app.root.current="manageaccount"
+			MDRaisedButton:
+				text:"check Users Database"
+				size_hint:(1,0.25)
+				on_release:
+					app.root.current="userdata"
+		Image:
+			source:"images/library.jpg"
+			size_hint:(0.7,1)
+
+<AdminLogin>:
+	username:username_kv
+	password:password_kv
+	name:"adminlogin"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	next_page:"home"
+	page_title:"Admin Login"
+	BoxLayout:
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		size_hint:(0.5,0.4)
+		spacing:"10dp"
+		orientation:"vertical"
+		MDTextField:
+			id:username_kv
+			hint_text:"Username"
+			size_hint:(1,0.33)
+			helper_text:"Wrong Username"
+			helper_text_mode:"on_error"
+		MDTextField:
+			id:password_kv
+			hint_text:"Password"
+			password:True
+			size_hint:(1,0.33)
+			helper_text:"Wrong Password"
+			helper_text_mode:"on_error"
+		MDRaisedButton:
+			text:"Login"
+			size_hint:(0.5,0.33)
+			pos_hint:{"center_x":0.5}
+			on_release:
+				root.login()
+		MDFlatButton
+			text:"Forgot Password"
+			text_color:[1,0,0,1]
+			pos_hint:{"center_x":0.5}
+			size_hint:(0.5,0.33)
+<Status>:
+	name:"status"
+	status_layout:status_layout_kv
+	next_page:"admin"
+	page_title:"Status"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	BoxLayout:
+		size_hint:(1,0.8)
+		orientation:"vertical"
+		pos_hint:{"center_y":0.5}
+		MaterialStatus:
+			userid:"Access Code"
+			username:"Name"
+			material:"Material id"
+			date:'Date'
+			status:"Status"
+			size_hint:(1,0.1)
+		ScrollView:
+			size_hint:(1,0.9)
+			pos_hint:{"center_y":0.5}
+			GridLayout:
+				id:status_layout_kv
+				cols:1
+				size_hint:(1,None)
+				height:self.minimum_height
+				padding:["10dp","10dp"]
+				spacing:"10dp"
+				
+
+<UserData>:
+	librarian:librarian_kv
+	patron:patron_kv
+	name:"userdata"
+	page_title:"User's Database"
+	next_page:"admin"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	BoxLayout:
+		size_hint:(1,0.8)
+		orientation:"vertical"
+		pos_hint:{"center_y":0.5}
+		MDLabel:
+			text:"Patron"
+			size_hint:(1,0.1)
+			font_style:"Subhead"
+		UserCard:
+			accesscode:"Access Code"
+			surname: "Surname"
+			lastname: "Lastname"
+			sex: "Sex"
+			age: "Age"
+			size_hint:(1,0.1)
+			
+		ScrollView:
+			size_hint:(1,0.3)
+			GridLayout:
+				id:librarian_kv
+				size_hint:(1,None)
+				height:self.minimum_height
+				spacing:"2dp"
+				padding:("2dp","2dp")
+				cols:1
+				
+		MDLabel:
+			text:"Librarian"
+			size_hint:(1,0.1)
+			font_style:"Subhead"
+		UserCard:
+			accesscode:"Access Code"
+			surname: "Surname"
+			lastname: "Lastname"
+			sex: "Sex"
+			age: "Age"
+			size_hint:(1,0.1)
+		ScrollView:
+			size_hint:(1,0.3)
+			GridLayout:
+				id:patron_kv
+				size_hint:(1,None)
+				height:self.minimum_height
+				spacing:"2dp"
+				cols:1
+				padding:("2dp","2dp")
+
+<ManageAccount>:
+	name:"manageaccount"
+	page_title:"Manage Accounts"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	next_page:"admin"
+	BoxLayout:
+		spacing:"10dp"
+		size_hint:(1,0.8)
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		padding:[10,0]
+		BoxLayout:
+			orientation:"vertical"
+			size_hint:(0.3,0.3)
+			spacing:"10dp"
+			pos_hint:{"center_y":0.5}
+			MDRaisedButton:
+				text:"Add"
+				size_hint:(1,0.5)	
+				on_release:
+					app.root.current="add"
+			MDRaisedButton:
+				text:"Delete"
+				size_hint:(1,0.5)
+				on_release:
+					app.root.current="delete"
+		Image:
+			source:"images/library.jpg"
+			size_hint:(0.7,1)
+
+<AddUser>:
+	name:"add"
+	surname:surname_kv
+	lastname:lastname_kv
+	age:age_kv
+	page_title:"Add User"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	next_page:"admin"
+	BoxLayout:
+		size_hint:(0.6,0.6)
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		orientation:"vertical"
+		MDTextField:
+			id:surname_kv
+			hint_text:"Surname"
+			size_hint:(1,0.2)
+		MDTextField:
+			id:lastname_kv
+			hint_text:"Last Name"
+			size_hint:(1,0.2)
+		MDTextField:
+			id:age_kv
+			hint_text:"Age"
+			size_hint:(1,0.2)
+		BoxLayout:
+			size_hint:(1,0.2)
+			MDLabel:
+				text:"Sex:"
+
+			MDCheckbox:
+				
+				group:"sex"
+				active:True
+				value:"Male"
+				on_state:
+					root.sex_change(self)
+			MDLabel:
+				text:"Male"
+			MDCheckbox:
+				group:"sex"
+
+				value:"Female"
+				on_state:
+					root.sex_change(self)
+			MDLabel:
+				text:"Female"
+		#users option
+		BoxLayout:
+			size_hint:(1,0.2)
+			MDLabel:
+				text:"User Type:"
+
+			MDCheckbox:
+				
+				group:"users"
+				value:"Pat"
+				active:True
+				on_state:
+					root.sex_change(self)
+			MDLabel:
+				text:"Patron"
+			MDCheckbox:
+				group:"users"
+				value:"Lib"
+				on_state:
+					root.sex_change(self)
+			MDLabel:
+				text:"Librarian"
+		
+		MDRaisedButton:
+			text:"Add"
+			size_hint:(1,0.2)
+			on_release:
+				root.add_user()
+
+<DeleteUser>:
+	name:"delete"
+	accesscode:accesscode_kv
+	page_title:"Delete User"
+	next_page:"admin"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	BoxLayout:
+		size_hint:(0.6,0.3)
+		spacing:"10dp"
+		orientation:"vertical"
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		MDTextField:
+			id:accesscode_kv
+			hint_text:"Access Code"
+			size_hint:(1,0.33)
+		BoxLayout:
+			size_hint:(1,0.33)
+			MDLabel:
+				text:"User Type:"
+
+			MDCheckbox:
+				
+				group:"users"
+				value:"Pat"
+				active:True
+				on_state:
+					root.sex_change(self)
+			MDLabel:
+				text:"Patron"
+			MDCheckbox:
+				group:"users"
+				value:"Lib"
+				on_state:
+					root.sex_change(self)
+			MDLabel:
+				text:"Librarian"
+		MDRaisedButton:
+			text:"Delete"
+			size_hint:(0.5,0.33)
+			pos_hint:{"center_x":0.5}
+			on_release:
+				root.delete()
+
+
+
+	
+<Librarian>:
+	name: "librarian"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	page_title:"Librarian"
+	next_page:"librarianlogin"
+	BoxLayout:
+		spacing:"10dp"
+		size_hint:(1,0.8)
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		padding:[10,0]
+		BoxLayout:
+			orientation:"vertical"
+			size_hint:(0.3,0.3)
+			pos_hint:{"center_y":0.5}
+			spacing:"10dp"
+			MDRaisedButton:
+				text:"Add Materials"
+				size_hint:(1,0.5)
+				on_release:
+					app.root.current="addmaterial"
+			MDRaisedButton:
+				text:"Delete Materials"
+				size_hint:(1,0.5)
+				on_release:
+					app.root.current="deletematerial"
+		Image:
+			size_hint:(0.7,1)
+			source:"images/library.jpg"
+		
+
+<AddMaterial>:
+	material:material_kv
+	author:author_kv
+	mat_id:mat_id_kv
+	name:"addmaterial"
+	page_title:"Adding Material"
+	next_page:"librarian"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	BoxLayout:
+		orientation:"vertical"
+		size_hint:(0.8,0.4)
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		BoxLayout:
+			size_hint:(1,0.2)
+			pos_hint:{"center_x":0.5}
+			background_color:color
+			MDLabel:
+				text:"Type of Material:"
+				size_hint:(0.5,1)
+			Spinner:
+				id:material_kv
+				text:"Book"
+				values:["Book","Micro Finch","Magazine","Encyclopaedia"]
+				size_hint:(0.5,1)
+				background_color:color
+		MDTextField:
+			id:author_kv
+			hint_text:"Author"
+			size_hint:(1,0.2)
+		
+		MDTextField:
+			id:mat_id_kv
+			hint_text:"ID"
+			size_hint:(1,0.2)
+		
+		MDRaisedButton:
+			text:"Add"
+			size_hint:(0.5,0.2)
+			pos_hint:{"center_x":0.5}
+			on_release:
+				root.add_mat()
+
+
+			
+
+
+<DeleteMaterial>:
+	name:"deletematerial"
+	mat_id:mat_id_kv
+	page_title:"Deleting Material"
+	next_page:"librarian"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	BoxLayout:
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		size_hint:(0.8,0.2)
+		orientation:"vertical"
+		spacing:"10dp"
+		MDTextField:
+			id:mat_id_kv
+			hint_text:"Book Id"
+			size_hint:(1,0.5)
+	
+		MDRaisedButton:
+			text:"Delete"
+			size_hint:(0.5,0.5)
+			pos_hint:{"center_x":0.5}
+			on_release:
+				root.delete()
+
+
+
+<LibrarianLogin>:
+	accesscode:accesscode_kv
+	name: "librarianlogin"
+	left:[["arrow-left",lambda x: root.move()]]
+	right:[["close",lambda x: Window.close()]]
+	next_page:"home"
+	page_title:"Librarian Login"
+	BoxLayout:
+		pos_hint:{"center_x":0.5,"center_y":0.5}
+		size_hint:(0.5,0.2)
+		spacing:"10dp"
+		orientation:"vertical"
+		MDTextField:
+			id:accesscode_kv
+			hint_text:"Access Code"
+			size_hint:(1,0.5)
+		
+		MDRaisedButton:
+			text:"Login"
+			size_hint:(0.5,0.5)
+			pos_hint:{"center_x":0.5}
+			on_release:
+				root.login()
+

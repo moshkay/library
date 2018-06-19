@@ -1,0 +1,112 @@
+#: import Toolbar kivymd.toolbar.Toolbar
+#: import MDSeparator kivymd.card.MDSeparator
+#: set screen_color [1.0,0.99,0.9,1]
+
+<Screen>:
+	canvas.before:
+		Color:
+			rgba:screen_color
+		Rectangle:
+			pos:self.pos
+			size:self.size
+<MDRaisedButton>:
+	halign:"center"
+<MDLabel>:
+	halign:"center"
+	theme_text_color:"Custom"
+<MDDialog>:
+	size_hint:(0.5,0.5)
+	pos_hint:{"center_x":0.5,"center_y":0.5}
+	auto_dismiss:False
+<Dialog>:
+	label:label
+	MDLabel:
+		id: label
+		size_hint_y:None
+		bold:True
+		font_style:"Subhead"
+
+
+<ToolbarScreen>:
+	Toolbar:
+		title:root.page_title
+		pos_hint:{"top":1}
+		md_bg_color:color
+		left_action_items:root.left
+		right_action_items:root.right
+	MDLabel:
+		text:"Powered by csc 409 Group 9"
+		size_hint:(1,0.1)
+		pos_hint:{"bottom":1}
+		font_style:"Subhead"
+		theme_text_color:"Custom"
+		text_color:color
+		bold:True
+<MaterialStatus>:
+	orientation:"horizontal"
+	size_hint:(0.8,None)
+	height:"40dp"
+	pos_hint:{"center_x":0.5}
+	MDLabel:
+		text:root.userid
+		size_hint:(0.2,1)
+	MDSeparator:
+		width:dp(3)
+		orientation:"vertical"
+		
+	MDLabel:
+		text:root.username
+		size_hint:(0.2,1)
+	MDSeparator:
+		width:dp(1)
+		orientation:"vertical"
+	MDLabel:
+		text:root.material
+		size_hint:(0.2,1)
+	MDSeparator:
+		width:dp(1)
+		orientation:"vertical"
+	MDLabel:
+		text:root.date
+		size_hint:(0.2,1)
+	MDSeparator:
+		width:dp(1)
+		orientation:"vertical"
+	MDLabel:
+		text:root.status
+		size_hint:(0.2,1)
+<UserCard>:
+	orientation:"horizontal"
+	size_hint:(0.8,None)
+	height:"40dp"
+	pos_hint:{"center_x":0.5}
+	MDLabel:
+		text:root.accesscode
+		size_hint:(0.2,1)
+	MDSeparator:
+		width:dp(3)
+		orientation:"vertical"
+		
+	MDLabel:
+		text:root.surname
+		size_hint:(0.2,1)
+	MDSeparator:
+		width:dp(1)
+		orientation:"vertical"
+	MDLabel:
+		text:root.lastname
+		size_hint:(0.2,1)
+	MDSeparator:
+		width:dp(1)
+		orientation:"vertical"
+	MDLabel:
+		text:root.sex
+		size_hint:(0.2,1)
+	MDSeparator:
+		width:dp(1)
+		orientation:"vertical"
+	MDLabel:
+		text:root.age
+		size_hint:(0.2,1)
+	
+	
